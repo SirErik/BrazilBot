@@ -1,73 +1,77 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
-
+ 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+ 
+ 
 namespace BrazilBot
 {
     class MyBot
     {
-        DiscordClient discord;
+        DiscordClient _client;
         CommandService commands;
-
+ 
+        private const string _TOKEN = "InsertTokenHere";
+ 
         public MyBot()
         {
-            discord = new DiscordClient(x =>
+            _client = new DiscordClient(x =>
             {
                 x.LogLevel = LogSeverity.Info;
                 x.LogHandler = Log;
-
+ 
             });
-
-            discord.UsingCommands(x =>
+ 
+            _client.UsingCommands(x =>
             {
                 x.PrefixChar = '!';
                 x.AllowMentionPrefix = true;
             });
-
-            commands = discord.GetService<CommandService>();
-
-            RegisterZoxabelsCommand();
-            RegisterPerssonCommand();
-            RegisterTobakaZCommand();
-
-            discord.ExecuteAndWait(async () =>
+ 
+            commands = _client.GetService<CommandService>();
+ 
+            registerCommands();
+ 
+            _client.UserJoined += async (s, e) => {
+                // Check to make sure that the user is not a bot
+                if (!e.User.IsBot)
+                    // Say hola to the user that joined!
+                    await e.Server.FindChannels("bottest").FirstOrDefault().SendMessage($"Hola {e.User.Name}!");
+            };
+ 
+            _client.ExecuteAndWait(async () =>
             {
-                await discord.Connect("", TokenType.Bot);
+                await _client.Connect(_TOKEN, TokenType.Bot);
             });
+ 
+           
         }
-
-        private void RegisterZoxabelsCommand()
+ 
+        private void registerCommands()
         {
             commands.CreateCommand("zoxabels")
                         .Do(async (e) =>
-                            {
-                                await e.Channel.SendMessage("I am shit and can only win with cancer strat");
-                            });
-        }
-        
-        private void RegisterTobakaZCommand()
-        {
+                        {
+                            await e.Channel.SendMessage("I am shit and can only win with cancer strat. I am still better than Erik though.");
+                        });
             commands.CreateCommand("tobakaz")
                         .Do(async (e) =>
-                            {
-                                await e.Channel.SendMessage("TobakaZ is the pink fluffy unicorn, standing in your backyard and eating all of your fabulous flowers");
-                            });
-        }
-
-        private void RegisterPerssonCommand()
-        {
+                        {
+                            await e.Channel.SendMessage("TobakaZ is the pink fluffy unicorn, standing in your backyard and eating all of your fabulous flowers. Da.");
+                        });
             commands.CreateCommand("Persson")
                 .Do(async (e) =>
                 {
-                    await e.Channel.SendMessage("I have the biggest dick");
+                    await e.Channel.SendMessage("I am delusional and think I can beat push strat. Also, I have the smallest dick in the world.");
+                });
+            commands.CreateCommand("#")
+                .Do(async (e) =>
+                {
+                    await e.Channel.SendMessage("#Sweet!");
                 });
         }
-
+ 
         private void Log(object sender, LogMessageEventArgs e)
         {
             Console.WriteLine(e.Message);
