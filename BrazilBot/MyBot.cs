@@ -33,6 +33,7 @@ namespace BrazilBot
 
             RegisterZoxabelsCommand();
             RegisterPerssonCommand();
+            RegisterTobakaZCommand();
 
             discord.ExecuteAndWait(async () =>
             {
