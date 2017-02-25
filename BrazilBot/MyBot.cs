@@ -48,6 +48,15 @@ namespace BrazilBot
                                 await e.Channel.SendMessage("I am shit and can only win with cancer strat");
                             });
         }
+        
+        private void RegisterTobakaZCommand()
+        {
+            commands.CreateCommand("tobakaz")
+                        .Do(async (e) =>
+                            {
+                                await e.Channel.SendMessage("TobakaZ is the pink fluffy unicorn, standing in your backyard and eating all of your fabulous flowers");
+                            });
+        }
 
         private void RegisterPerssonCommand()
         {
