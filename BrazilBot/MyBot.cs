@@ -42,9 +42,14 @@ namespace BrazilBot
 
             _client.UserUpdated += async (s, e) =>
             {
-                TimeSpan timeElapsed = DateTime.Now - (DateTime)e.After.LastOnlineAt; //Calculate how long it has been since user was last online
-                int minutes = Convert.ToInt32(timeElapsed.TotalMinutes); //Convert to minutes
-                if (e.After.Status.Equals(UserStatus.Online) && (e.After.CurrentGame == null || e.Before.CurrentGame == null) && minutes > 10) //User has come online, did not enter/exit game and hasn't been online for more than 10 minutes.
+                int minutes = 10;
+                if (e.After.LastOnlineAt != null)
+                {
+                    TimeSpan timeElapsed = DateTime.Now - (DateTime)e.After.LastOnlineAt; //Calculate how long it has been since user was last online
+                    minutes = Convert.ToInt32(timeElapsed.TotalMinutes); //Convert to minutes
+                }
+                
+                if (e.After.Status.Equals(UserStatus.Online) && minutes >= 10 && (e.After.CurrentGame == null || e.Before.CurrentGame == null)) //User has come online, hasn't been online for more than 10 minutes and did not enter/exit game.
                 {
                     await e.Server.FindChannels("bottest").FirstOrDefault().SendMessage($"Hola {e.After.NicknameMention}!");
                 }
@@ -86,6 +91,17 @@ namespace BrazilBot
                         await e.Channel.SendMessage($"#WhatAPlayer {e.User.NicknameMention}!");
                     }
                     
+                });
+            commands.CreateCommand("seen")
+                .Description("Returns the date the requested user was last seen")
+                .Parameter("requestedUser", ParameterType.Required)
+                .Do(async e =>
+                {
+                    User requestedUser = e.Server.FindUsers(e.GetArg("requestedUser")).FirstOrDefault();
+                    if(requestedUser != null)
+                    {
+                        await e.Channel.SendMessage($"{requestedUser.Nickname} was last seen on {requestedUser.LastActivityAt}.");
+                    }
                 });
         }
 
