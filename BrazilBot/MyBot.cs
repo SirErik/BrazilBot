@@ -37,14 +37,14 @@ namespace BrazilBot
                 // Check to make sure that the user is not a bot
                 if (!e.User.IsBot)
                     // Say hola to the user that joined!
-                    await e.Server.FindChannels("bottest").FirstOrDefault().SendMessage($"Hola {e.User.Name}!");
+                    await e.Server.FindChannels("bottest").FirstOrDefault().SendMessage($"Hola {e.User.NicknameMention}!");
             };
 
             _client.UserUpdated += async (s, e) =>
             {
                 if (e.After.Status.Equals(UserStatus.Online))
                 {
-                    await e.Server.FindChannels("bottest").FirstOrDefault().SendMessage($"Hola @{e.After.Name}!");
+                    await e.Server.FindChannels("bottest").FirstOrDefault().SendMessage($"Hola {e.After.NicknameMention}!");
                 }
             };
 
@@ -76,12 +76,12 @@ namespace BrazilBot
             commands.CreateCommand("#")
                 .Do(async (e) =>
                 {
-                    if (e.User.Name.Equals("HashTag"))
+                    if (e.User.Name.Equals("Hash_Tag"))
                     {
                         await e.Channel.SendMessage("#Sweet!");
                     }else
                     {
-                        await e.Channel.SendMessage($"#WhatAPlayer {e.User.NicknameMention} {e.User.Name}!");
+                        await e.Channel.SendMessage($"#WhatAPlayer {e.User.NicknameMention}!");
                     }
                     
                 });
