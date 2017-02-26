@@ -42,7 +42,9 @@ namespace BrazilBot
 
             _client.UserUpdated += async (s, e) =>
             {
-                if (e.After.Status.Equals(UserStatus.Online))
+                TimeSpan timeElapsed = DateTime.Now - (DateTime)e.After.LastOnlineAt; //Calculate how long it has been since user was last online
+                int minutes = Convert.ToInt32(timeElapsed.TotalMinutes); //Convert to minutes
+                if (e.After.Status.Equals(UserStatus.Online) && (e.After.CurrentGame == null || e.Before.CurrentGame == null) && minutes > 10) //User has come online, did not enter/exit game and hasn't been online for more than 10 minutes.
                 {
                     await e.Server.FindChannels("bottest").FirstOrDefault().SendMessage($"Hola {e.After.NicknameMention}!");
                 }
@@ -76,7 +78,7 @@ namespace BrazilBot
             commands.CreateCommand("#")
                 .Do(async (e) =>
                 {
-                    if (e.User.Name.Equals("Hash_Tag"))
+                    if (e.User.Name.Equals("`HashTag`"))
                     {
                         await e.Channel.SendMessage("#Sweet!");
                     }else
