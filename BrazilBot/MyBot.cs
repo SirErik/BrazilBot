@@ -37,19 +37,20 @@ namespace BrazilBot
                 // Check to make sure that the user is not a bot
                 if (!e.User.IsBot)
                     // Say hola to the user that joined!
-                    await e.Server.FindChannels("bottest").FirstOrDefault().SendMessage($"Hola {e.User.NicknameMention}!");
+                    await e.Server.FindChannels("bottest").FirstOrDefault().SendMessage($"User joined! Hola {e.User.NicknameMention}!");
             };
 
             _client.UserUpdated += async (s, e) =>
             {
                 int minutes = 10;
-                if (e.After.LastOnlineAt != null)
+                if (e.After.LastActivityAt != null)
                 {
-                    TimeSpan timeElapsed = DateTime.Now - (DateTime)e.After.LastOnlineAt; //Calculate how long it has been since user was last online
+                    TimeSpan timeElapsed = DateTime.Now.AddHours(1) - (DateTime)e.After.LastActivityAt; //Calculate how long it has been since user was last online
                     minutes = Convert.ToInt32(timeElapsed.TotalMinutes); //Convert to minutes
+                    await e.Server.FindChannels("bottest").FirstOrDefault().SendMessage($"{e.After.NicknameMention}'s last activity was at {e.After.LastActivityAt} which was {minutes} minutes ago!");
                 }
                 
-                if (e.After.Status.Equals(UserStatus.Online) && minutes >= 10 && (e.After.CurrentGame == null || e.Before.CurrentGame == null)) //User has come online, hasn't been online for more than 10 minutes and did not enter/exit game.
+                if ((e.After.Status.Equals(UserStatus.Online) && minutes >= 10) && (e.After.CurrentGame == null || e.Before.CurrentGame == null)) //User has come online, hasn't been online for more than 10 minutes and did not enter/exit game.
                 {
                     await e.Server.FindChannels("bottest").FirstOrDefault().SendMessage($"Hola {e.After.NicknameMention}!");
                 }
@@ -100,7 +101,7 @@ namespace BrazilBot
                     User requestedUser = e.Server.FindUsers(e.GetArg("requestedUser")).FirstOrDefault();
                     if(requestedUser != null)
                     {
-                        await e.Channel.SendMessage($"{requestedUser.Nickname} was last seen on {requestedUser.LastActivityAt}.");
+                        await e.Channel.SendMessage($"{requestedUser.Name} was last seen on {requestedUser.LastActivityAt}.");
                     }
                 });
         }
