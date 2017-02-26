@@ -44,7 +44,7 @@ namespace BrazilBot
             {
                 if (e.After.Status.Equals(UserStatus.Online))
                 {
-                    await e.Server.FindChannels("bottest").FirstOrDefault().SendMessage($"Hola {e.After.Name}!");
+                    await e.Server.FindChannels("bottest").FirstOrDefault().SendMessage($"Hola @{e.After.Name}!");
                 }
             };
 
@@ -81,7 +81,7 @@ namespace BrazilBot
                         await e.Channel.SendMessage("#Sweet!");
                     }else
                     {
-                        await e.Channel.SendMessage("#WhatAPlayer!");
+                        await e.Channel.SendMessage($"#WhatAPlayer {e.User.NicknameMention} {e.User.Name}!");
                     }
                     
                 });
