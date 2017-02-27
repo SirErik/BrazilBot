@@ -81,6 +81,11 @@ namespace BrazilBot
                 {
                     await e.Channel.SendMessage("I am delusional and think I can beat push strat. I do however have the biggest dick.");
                 });
+             commands.CreateCommand("bouncysheep")
+                        .Do(async (e) =>
+                        {
+                            await e.Channel.SendMessage("The most bounciest bouncer of the bouncy sheep.");
+                        });
             commands.CreateCommand("#")
                 .Do(async (e) =>
                 {
